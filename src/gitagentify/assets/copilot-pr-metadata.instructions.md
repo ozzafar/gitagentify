@@ -38,7 +38,7 @@ CLI" metadata block to the top of the PR description. The block is produced **by
 - Re-run the command and refresh the block whenever you push new commits to the PR, so late model
   switches and newly explored files are reflected.
 
-The companion `.githooks/prepare-commit-msg` hook stamps the equivalent structured git trailers
+The companion `.gitagentify/prepare-commit-msg` hook stamps the equivalent structured git trailers
 (`Copilot-Session-Id`, `Copilot-Model`, `Copilot-CLI-Version`) onto each Copilot-authored commit;
 the command aggregates those trailers across the branch. Files explored are **not** stamped into
 commits - they come only from the current session log.

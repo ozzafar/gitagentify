@@ -2,7 +2,7 @@
 
 Subcommands:
   activate     Install the Copilot metadata hook + instructions into the CURRENT repo and wire the
-               commit hook for THIS clone only (git config --local core.hooksPath .githooks).
+               commit hook for THIS clone only (git config --local core.hooksPath .gitagentify).
   deactivate   Unset the local core.hooksPath wiring for this clone (leaves tracked files in place;
                --purge also removes the installed files).
   status       Show whether gitagentify is activated in the current repo/clone.
@@ -28,16 +28,23 @@ from . import generate as _generate
 
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 
-HOOKS_DIR_NAME = ".githooks"
-HOOKS_PATH_VALUE = ".githooks"  # value we set core.hooksPath to (repo-relative)
+HOOKS_DIR_NAME = ".gitagentify"
+HOOKS_PATH_VALUE = ".gitagentify"  # value we set core.hooksPath to (repo-relative)
+
+# Copilot only auto-loads instructions matched by ".github/instructions/**/*.instructions.md" - the
+# "**" lets us nest them in a dedicated gitagentify/ subfolder while staying discoverable.
+INSTRUCTIONS_DIR = Path(".github") / "instructions" / "gitagentify"
 
 # (asset filename, destination relative to repo root, make executable?)
 INSTALL_MAP = [
-    ("prepare-commit-msg", Path(".githooks") / "prepare-commit-msg", True),
-    ("gitattributes", Path(".githooks") / ".gitattributes", False),
+    ("prepare-commit-msg", Path(HOOKS_DIR_NAME) / "prepare-commit-msg", True),
+    ("gitattributes", Path(HOOKS_DIR_NAME) / ".gitattributes", False),
     ("copilot-pr-metadata.instructions.md",
-     Path(".github") / "instructions" / "copilot-pr-metadata.instructions.md", False),
+     INSTRUCTIONS_DIR / "copilot-pr-metadata.instructions.md", False),
 ]
+
+# Dedicated directories gitagentify owns; on --purge we remove them if left empty.
+DEDICATED_DIRS = [Path(HOOKS_DIR_NAME), INSTRUCTIONS_DIR]
 
 
 def _run_git(args, cwd, capture=True, check=False):
@@ -102,7 +109,7 @@ def cmd_activate(args) -> int:
     print()
     print("Next steps:")
     print("  1. Commit the installed files so teammates get the hook + instructions:")
-    print(f"       git add {HOOKS_DIR_NAME} .github/instructions/copilot-pr-metadata.instructions.md")
+    print(f"       git add {HOOKS_DIR_NAME} {INSTRUCTIONS_DIR.as_posix()}")
     print("       git commit -m \"Add gitagentify Copilot session metadata\"")
     print("  2. core.hooksPath is per-clone and is NOT committed. Each teammate runs")
     print("     'gitagentify activate' once in their own clone to wire the hook.")
@@ -128,9 +135,10 @@ def cmd_deactivate(args) -> int:
             if target.exists():
                 target.unlink()
                 print(f"Removed {rel_dest.as_posix()}")
-        hooks_dir = root / HOOKS_DIR_NAME
-        if hooks_dir.is_dir() and not any(hooks_dir.iterdir()):
-            hooks_dir.rmdir()
+        for rel_dir in DEDICATED_DIRS:
+            d = root / rel_dir
+            if d.is_dir() and not any(d.iterdir()):
+                d.rmdir()
     else:
         print("Installed files were left in place (they are tracked). Use --purge to remove them.")
     return 0

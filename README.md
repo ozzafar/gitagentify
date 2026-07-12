@@ -22,7 +22,7 @@ GitAgentify installs two cooperating pieces into a repo:
    The hook only fires when `COPILOT_CLI=1`, skips merge/squash commits, is idempotent, and chains to
    any existing `.git/hooks/prepare-commit-msg.local`.
 
-2. **A repo-scoped Copilot instructions file** (`.github/instructions/copilot-pr-metadata.instructions.md`)
+2. **A repo-scoped Copilot instructions file** (`.github/instructions/gitagentify/copilot-pr-metadata.instructions.md`)
    plus the `gitagentify pr-description` generator. Together they tell the agent to attach a code-authored
    metadata block (models, session ids, CLI version, files explored) to the top of every PR
    description it creates or updates.
@@ -43,10 +43,12 @@ cd your-repo
 gitagentify activate
 ```
 
-This:
+This writes everything into two dedicated `gitagentify` folders:
 
-- writes `.githooks/prepare-commit-msg`, `.githooks/.gitattributes`, and the instructions file,
-- wires the hook with `git config --local core.hooksPath .githooks`.
+- `.gitagentify/prepare-commit-msg` + `.gitagentify/.gitattributes` (the commit hook),
+- `.github/instructions/gitagentify/copilot-pr-metadata.instructions.md` (the PR instructions),
+
+and wires the hook with `git config --local core.hooksPath .gitagentify`.
 
 > **Scope guarantee:** activation is **strictly per-clone**. GitAgentify only ever writes the
 > repository-local git config (`git config --local ...`), which lives in this clone's `.git/config`.
@@ -57,7 +59,7 @@ This:
 Commit the installed files so teammates get the hook + instructions:
 
 ```bash
-git add .githooks .github/instructions/copilot-pr-metadata.instructions.md
+git add .gitagentify .github/instructions/gitagentify/copilot-pr-metadata.instructions.md
 git commit -m "Add gitagentify Copilot session metadata"
 ```
 
