@@ -27,6 +27,14 @@ GitAgentify installs two cooperating pieces into a repo:
    metadata block (models, session ids, CLI version, files explored) to the top of every PR
    description it creates or updates.
 
+## Quick Start
+```bash
+pipx install git+https://github.com/ozzafar/gitagentify
+# or:  pip install git+https://github.com/ozzafar/gitagentify
+cd your-repo
+gitagentify activate
+```
+
 ## Install (once per machine)
 
 ```bash
