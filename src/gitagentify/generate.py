@@ -267,10 +267,17 @@ def generate(target_branch: str | None = None) -> str:
     cli_version = cli_list[0] if cli_list else ""
 
     # Files explored come only from the current session log (not persisted to commit trailers).
-    # Drop the tooling's own scratch/temp artifacts (the generated block file, probe scripts, etc.)
-    # so they never masquerade as explored source files.
-    log_files = [to_repo_relative(p) for p in session_log_files()]
-    files = distinct_in_order(f for f in log_files if f and not is_scratch_file(f))
+    # Only real files are surfaced: directory paths (e.g. from viewing a folder) are dropped, as are
+    # the tooling's own scratch/temp artifacts (the generated block file, probe scripts, etc.), so
+    # neither masquerades as an explored source file.
+    files = []
+    for p in session_log_files():
+        if os.path.isdir(p):
+            continue
+        rel = to_repo_relative(p)
+        if rel and not is_scratch_file(rel):
+            files.append(rel)
+    files = distinct_in_order(files)
 
     if not models:
         print("Could not determine any model (no Copilot-Model trailers and no session-log model history).",

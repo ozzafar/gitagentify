@@ -62,3 +62,36 @@ def test_build_block_omits_files_section_when_empty():
 def test_build_block_cli_unknown_when_blank():
     block = g.build_block(["m"], "", ["s"], [])
     assert "`unknown`" in block
+
+
+def test_generate_excludes_directories_from_files(tmp_path, monkeypatch):
+    repo = tmp_path
+    (repo / "README.md").write_text("readme")
+    (repo / "src").mkdir()
+    (repo / "src" / "app.py").write_text("code")
+
+    monkeypatch.setattr(g, "REPO_ROOT", str(repo))
+    monkeypatch.setattr(g, "resolve_repo_root", lambda: str(repo))
+    monkeypatch.setattr(g, "default_target_branch", lambda: "origin/main")
+    monkeypatch.setattr(g, "git", lambda *a, **k: "")
+    monkeypatch.setattr(g, "session_log_models", lambda: ["claude-opus-4.8"])
+    monkeypatch.setattr(
+        g,
+        "session_log_files",
+        lambda: [
+            str(repo),
+            str(repo / "src"),
+            str(repo / "src" / "app.py"),
+            str(repo / "README.md"),
+        ],
+    )
+    monkeypatch.setenv("COPILOT_AGENT_SESSION_ID", "sess-1")
+
+    block = g.generate()
+
+    assert "Files explored (2)" in block
+    assert "`src/app.py`" in block
+    assert "`README.md`" in block
+    assert "`src`" not in block
+    assert "`.`" not in block
+
