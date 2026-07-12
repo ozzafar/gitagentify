@@ -25,8 +25,8 @@ GitAgentify installs two cooperating pieces into a repo:
 ## Install (once per machine)
 
 ```bash
-pipx install git+https://github.com/ozzafar/GitAgentify
-# or:  pip install git+https://github.com/ozzafar/GitAgentify
+pipx install git+https://github.com/ozzafar/gitagentify
+# or:  pip install git+https://github.com/ozzafar/gitagentify
 ```
 
 ## Activate (once per clone)

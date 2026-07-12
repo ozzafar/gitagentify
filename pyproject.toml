@@ -23,7 +23,7 @@ dependencies = []
 gitagentify = "gitagentify.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/ozzafar/GitAgentify"
+Homepage = "https://github.com/ozzafar/gitagentify"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
