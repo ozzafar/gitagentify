@@ -28,6 +28,7 @@ GitAgentify installs two cooperating pieces into a repo:
    description it creates or updates.
 
 ## Quick Start
+
 ```bash
 pipx install git+https://github.com/ozzafar/gitagentify
 # or:  pip install git+https://github.com/ozzafar/gitagentify
