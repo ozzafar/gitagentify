@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/icon.svg" alt="GitAgentify logo" width="128" height="128">
+</p>
+
 # GitAgentify
 
 Stamp **Copilot CLI session metadata** onto your git history and pull requests, so every commit and

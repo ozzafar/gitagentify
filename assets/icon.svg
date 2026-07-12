@@ -1,0 +1,41 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GitAgentify">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1b1030"/>
+      <stop offset="1" stop-color="#0d1117"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="72" y1="48" x2="200" y2="208" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a371f7"/>
+      <stop offset="1" stop-color="#6e56cf"/>
+    </linearGradient>
+  </defs>
+
+  <!-- tile -->
+  <rect x="8" y="8" width="240" height="240" rx="52" fill="url(#bg)"/>
+  <rect x="8.5" y="8.5" width="239" height="239" rx="51.5" fill="none" stroke="#a371f7" stroke-opacity="0.25"/>
+
+  <!-- git graph: trunk with two commit nodes and a branch reaching the agent -->
+  <g stroke="url(#accent)" stroke-width="12" stroke-linecap="round" fill="none">
+    <path d="M84 68 V188"/>
+    <path d="M84 128 C84 160, 116 164, 140 164"/>
+  </g>
+  <circle cx="84" cy="68" r="18" fill="#0d1117" stroke="url(#accent)" stroke-width="12"/>
+  <circle cx="84" cy="188" r="18" fill="#0d1117" stroke="url(#accent)" stroke-width="12"/>
+
+  <!-- AGENT: a friendly bot head sitting on the branch tip -->
+  <g>
+    <!-- antenna -->
+    <line x1="180" y1="118" x2="180" y2="132" stroke="url(#accent)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="180" cy="112" r="8" fill="#a371f7"/>
+    <!-- head -->
+    <rect x="146" y="132" width="68" height="60" rx="20" fill="url(#accent)"/>
+    <!-- eyes (agent "looking" at the history) -->
+    <circle cx="166" cy="162" r="8" fill="#0d1117"/>
+    <circle cx="194" cy="162" r="8" fill="#0d1117"/>
+    <circle cx="168.5" cy="159.5" r="2.6" fill="#e9defb"/>
+    <circle cx="196.5" cy="159.5" r="2.6" fill="#e9defb"/>
+  </g>
+
+  <!-- AI sparkle -->
+  <path d="M206 92 C206 100, 210 104, 218 104 C210 104, 206 108, 206 116 C206 108, 202 104, 194 104 C202 104, 206 100, 206 92 Z" fill="#e9defb" opacity="0.9"/>
+</svg>
