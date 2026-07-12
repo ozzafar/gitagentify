@@ -13,7 +13,7 @@ CLI" metadata block to the top of the PR description. The block is produced **by
 1. Generate the block by running the command and capturing its **stdout**:
 
    ```
-   gitagentify pr-block
+   gitagentify pr-description
    ```
 
    The command prints only the metadata block to stdout (a human-readable summary goes to stderr).

@@ -20,7 +20,7 @@ The block is built deterministically - it takes nothing on faith from the agent:
 Zero dependencies, standard library only, cross-platform.
 
 Output contract: the metadata block (only) is written to stdout. A human-readable summary of what was
-found is written to stderr. So `gitagentify pr-block > block.md` captures a clean block.
+found is written to stderr. So `gitagentify pr-description > block.md` captures a clean block.
 """
 
 from __future__ import annotations
@@ -304,7 +304,7 @@ def _reconfigure_utf8() -> None:
 def main(argv=None) -> int:
     _reconfigure_utf8()
     parser = argparse.ArgumentParser(
-        prog="gitagentify pr-block",
+        prog="gitagentify pr-description",
         description="Generate the Copilot session-metadata block for a PR description (prints to stdout).",
     )
     parser.add_argument(

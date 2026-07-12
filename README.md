@@ -3,6 +3,11 @@
 Stamp **Copilot CLI session metadata** onto your git history and pull requests, so every commit and
 PR can be traced back to the agent session (and model) that produced it.
 
+> **Scope:** GitAgentify currently targets **[GitHub Copilot](https://github.com/features/copilot)**
+> (the `copilot` CLI and its agents). It keys off Copilot's environment variables
+> (`COPILOT_CLI`, `COPILOT_AGENT_SESSION_ID`, `COPILOT_CLI_BINARY_VERSION`, `AGENCY_LOG_SESSION_DIR`)
+> and its `.github/instructions/` mechanism. Support for other coding agents may be added later.
+
 GitAgentify installs two cooperating pieces into a repo:
 
 1. **A `prepare-commit-msg` git hook** that adds structured trailers to every Copilot-authored
@@ -18,7 +23,7 @@ GitAgentify installs two cooperating pieces into a repo:
    any existing `.git/hooks/prepare-commit-msg.local`.
 
 2. **A repo-scoped Copilot instructions file** (`.github/instructions/copilot-pr-metadata.instructions.md`)
-   plus the `gitagentify pr-block` generator. Together they tell the agent to attach a code-authored
+   plus the `gitagentify pr-description` generator. Together they tell the agent to attach a code-authored
    metadata block (models, session ids, CLI version, files explored) to the top of every PR
    description it creates or updates.
 
@@ -63,11 +68,11 @@ git commit -m "Add gitagentify Copilot session metadata"
 | `gitagentify activate` | Install the hook + instructions into the current repo and wire the hook for this clone only. |
 | `gitagentify deactivate` | Unset the local `core.hooksPath` wiring. `--purge` also deletes the installed files. |
 | `gitagentify status` | Show activation status and which files are installed. |
-| `gitagentify pr-block` | Print the PR session-metadata block to stdout (what the agent attaches to a PR). |
+| `gitagentify pr-description` | Print the PR session-metadata block to stdout (what the agent attaches to a PR). |
 
 ## How the PR block is produced
 
-`gitagentify pr-block` computes the block deterministically - it trusts nothing from the agent:
+`gitagentify pr-description` computes the block deterministically - it trusts nothing from the agent:
 
 - **Models** - union of every distinct `Copilot-Model` commit trailer on the branch and every model
   recorded in the current session log (so a model is not lost when commits are squashed).

@@ -6,7 +6,7 @@ Subcommands:
   deactivate   Unset the local core.hooksPath wiring for this clone (leaves tracked files in place;
                --purge also removes the installed files).
   status       Show whether gitagentify is activated in the current repo/clone.
-  pr-block     Print the PR session-metadata block to stdout (what the agent attaches to a PR).
+  pr-description  Print the PR session-metadata block to stdout (what the agent attaches to a PR).
 
 Scoping guarantee: activation is strictly per-clone. We only ever touch the repository-local git
 config (git config --local ...), which lives in this clone's .git/config. We never write --global or
@@ -151,7 +151,7 @@ def cmd_status(args) -> int:
     return 0
 
 
-def cmd_pr_block(args) -> int:
+def cmd_pr_description(args) -> int:
     return _generate.main(["--target-branch", args.target_branch] if args.target_branch else [])
 
 
@@ -173,10 +173,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_status = sub.add_parser("status", help="Show activation status for the current repo/clone.")
     p_status.set_defaults(func=cmd_status)
 
-    p_block = sub.add_parser("pr-block", help="Print the PR session-metadata block to stdout.")
+    p_block = sub.add_parser("pr-description", help="Print the PR session-metadata block to stdout.")
     p_block.add_argument("--target-branch", default=None,
                          help="Branch the PR merges into (defaults to origin/HEAD, else origin/main).")
-    p_block.set_defaults(func=cmd_pr_block)
+    p_block.set_defaults(func=cmd_pr_description)
 
     return parser
 
