@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gitagentify"
+version = "0.1.0"
+description = "Stamp Copilot CLI session metadata onto git commits (trailers) and PR descriptions."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "ozzafar" }]
+keywords = ["git", "hooks", "copilot", "provenance", "pull-request", "metadata"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Version Control :: Git",
+]
+dependencies = []
+
+[project.scripts]
+gitagentify = "gitagentify.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ozzafar/GitAgentify"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+gitagentify = ["assets/*"]
