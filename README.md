@@ -3,6 +3,7 @@
 Stamp **Copilot CLI session metadata** onto your git history and pull requests, so every commit and
 PR can be traced back to the agent session (and model) that produced it.
 
+
 > **Scope:** GitAgentify currently targets **[GitHub Copilot](https://github.com/features/copilot)**
 > (the `copilot` CLI and its agents). It keys off Copilot's environment variables
 > (`COPILOT_CLI`, `COPILOT_AGENT_SESSION_ID`, `COPILOT_CLI_BINARY_VERSION`, `AGENCY_LOG_SESSION_DIR`)
