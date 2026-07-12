@@ -4,9 +4,9 @@ applyTo: "**"
 
 # Attach Copilot session metadata to pull requests
 
-Whenever you **create or update a pull request** in this repository (for example via the ADO MCP
-`repo_pull_request_write` tool or the GitHub PR tools), you MUST attach a "Generated with Copilot
-CLI" metadata block to the top of the PR description. The block is produced **by code**, not by you.
+Whenever you **create or update a pull request** in this repository (for example via command or MCP tool for GitHub or Azure DevOps),
+you MUST attach a "Generated with Copilot CLI" metadata block to the top of the PR description.
+The block is produced **by code**, not by you.
 
 ## Steps
 
