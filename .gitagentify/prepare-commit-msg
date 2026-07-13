@@ -62,13 +62,14 @@ MODEL="${COPILOT_MODEL:-}"
 
 if [ -z "$MODEL" ] && [ -n "${AGENCY_LOG_SESSION_DIR:-}" ] && [ -d "$AGENCY_LOG_SESSION_DIR" ]; then
   # 2. Latest session.model_change event: take the last "newModel":"..." seen.
+  # '|| true' keeps a no-match grep (exit 1) from aborting the hook under 'set -e'/pipefail.
   MODEL="$(grep -rho '"newModel"[[:space:]]*:[[:space:]]*"[^"]*"' "$AGENCY_LOG_SESSION_DIR" 2>/dev/null \
-    | sed 's/.*"\([^"]*\)"$/\1/' | tail -n1)"
+    | sed 's/.*"\([^"]*\)"$/\1/' | tail -n1 || true)"
 
   # 3. Fall back to the "Using default model:" line in the process log.
   if [ -z "$MODEL" ]; then
     MODEL="$(grep -rho 'Using default model:[[:space:]]*[^[:space:]]*' "$AGENCY_LOG_SESSION_DIR" 2>/dev/null \
-      | sed 's/.*:[[:space:]]*//' | tail -n1)"
+      | sed 's/.*:[[:space:]]*//' | tail -n1 || true)"
   fi
 fi
 
@@ -76,7 +77,7 @@ fi
 if [ -z "$MODEL" ]; then
   SETTINGS_FILE="${COPILOT_HOME:-$HOME/.copilot}/settings.json"
   if [ -f "$SETTINGS_FILE" ]; then
-    MODEL="$(sed -n 's/.*"model"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$SETTINGS_FILE" | head -n1)"
+    MODEL="$(sed -n 's/.*"model"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$SETTINGS_FILE" | head -n1 || true)"
   fi
 fi
 
@@ -87,6 +88,10 @@ ARGS=()
 [ -n "$MODEL" ]       && ARGS+=(--trailer "Copilot-Model: $MODEL")
 [ -n "$CLI_VERSION" ] && ARGS+=(--trailer "Copilot-CLI-Version: $CLI_VERSION")
 
-git interpret-trailers --in-place "${ARGS[@]}" "$COMMIT_MSG_FILE"
+# Guard on a non-empty array (safe under 'set -u' on older bash) and never let a
+# failing interpret-trailers block the commit - this hook only *adds* metadata.
+if [ "${#ARGS[@]}" -gt 0 ]; then
+  git interpret-trailers --in-place "${ARGS[@]}" "$COMMIT_MSG_FILE" || true
+fi
 
 exit 0
